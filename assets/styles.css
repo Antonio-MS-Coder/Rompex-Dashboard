@@ -2,12 +2,13 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
+    color: #333;
 }
 
 /* Estilos para encabezados */
 h1, h2, h3, h4, h5, h6 {
-    color: #2c3e50;
     font-weight: 600;
+    color: #2c3e50;
 }
 
 h1 {
@@ -18,95 +19,71 @@ h1 {
 
 /* Estilos para tarjetas */
 .card {
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-bottom: 15px;
+    border-radius: 10px;
     border: none;
+    transition: all 0.3s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
-    background-color: #3498db;
-    color: white;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     font-weight: 600;
-    border-radius: 8px 8px 0 0 !important;
-    padding: 0.75rem 1.25rem;
-    font-size: 1.1rem;
 }
 
-.card-body {
-    padding: 1.25rem;
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
 /* Estilos para botones */
 .btn-primary {
     background-color: #3498db;
     border-color: #3498db;
-    font-weight: 500;
-    padding: 0.5rem 1.5rem;
-    border-radius: 5px;
-    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     background-color: #2980b9;
     border-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-    font-weight: 500;
-    padding: 0.5rem 1.5rem;
-    border-radius: 5px;
-    transition: all 0.3s ease;
+    background-color: #95a5a6;
+    border-color: #95a5a6;
 }
 
 .btn-secondary:hover {
-    background-color: #5a6268;
-    border-color: #5a6268;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #7f8c8d;
+    border-color: #7f8c8d;
+}
+
+.btn-success {
+    background-color: #2ecc71;
+    border-color: #2ecc71;
+}
+
+.btn-success:hover {
+    background-color: #27ae60;
+    border-color: #27ae60;
 }
 
 /* Estilos para sliders */
 .rc-slider-track {
     background-color: #3498db;
-    height: 4px;
 }
 
 .rc-slider-handle {
     border-color: #3498db;
-    background-color: #fff;
-    width: 16px;
-    height: 16px;
-    margin-top: -6px;
-}
-
-.rc-slider-handle:hover {
-    border-color: #2980b9;
-}
-
-.rc-slider-handle:active {
-    border-color: #2980b9;
-    box-shadow: 0 0 5px #2980b9;
 }
 
 /* Estilos para tabs */
 .nav-tabs .nav-link.active {
     color: #3498db;
-    font-weight: 600;
-}
-
-.nav-tabs .nav-link {
-    color: #7f8c8d;
+    border-color: #3498db;
 }
 
 /* Estilos para contenedores */
@@ -115,120 +92,91 @@ h1 {
 }
 
 /* Estilos para gráficos */
-.dash-graph {
-    border-radius: 8px;
-    overflow: hidden;
+.js-plotly-plot {
+    border-radius: 5px;
 }
 
 /* Estilos para dropdowns */
 .Select-control {
-    border-radius: 4px;
-    border: 1px solid #ddd;
-    box-shadow: none;
-}
-
-.Select-menu-outer {
-    border-radius: 0 0 4px 4px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
 }
 
 /* Estilos para el footer */
 footer {
-    margin-top: 30px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-    color: #7f8c8d;
-}
-
-/* Estilos para el panel de control */
-.control-panel {
     background-color: #f8f9fa;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    border-top: 1px solid #e9ecef;
+    color: #6c757d;
 }
 
-/* Estilos para las etiquetas */
-label {
-    font-weight: 500;
-    color: #34495e;
-}
-
-/* Estilos para los checkboxes */
-.custom-control-label {
-    cursor: pointer;
-}
-
-/* Estilos para los tooltips de los gráficos */
-.plotly-tooltip {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    border: 1px solid #ddd !important;
-    border-radius: 4px !important;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
-    padding: 8px !important;
-}
-
-/* Estilos para el panel de personalización */
-#collapse-personalizar .card {
-    border: 1px solid #e0e0e0;
-    margin-bottom: 20px;
-}
-
-#collapse-personalizar .card-header {
-    background-color: #6c757d;
-    color: white;
-}
-
-.custom-switch .custom-control-label::before {
-    height: 1.25rem;
-    width: 2.25rem;
-    border-radius: 0.625rem;
-}
-
-.custom-switch .custom-control-input:checked ~ .custom-control-label::before {
+/* Estilos para checkboxes */
+.form-check-input:checked {
     background-color: #3498db;
     border-color: #3498db;
 }
 
+/* Estilos para el panel de personalización */
+#collapse-personalizar .card {
+    border-left: 4px solid #3498db;
+}
+
 /* Estilos para el modo presentación */
 .bg-dark {
-    background-color: #1e272e !important;
+    background-color: #2c3e50 !important;
+}
+
+.text-white {
+    color: #fff !important;
 }
 
 .bg-dark .card {
-    background-color: #2d3436;
-    border: 1px solid #3d3d3d;
+    background-color: #34495e;
+    color: #ecf0f1;
 }
 
 .bg-dark .card-header {
-    background-color: #0984e3;
+    background-color: #2c3e50;
+    color: #ecf0f1;
 }
 
-.bg-dark .card-body {
-    background-color: #2d3436;
+.bg-dark .btn-primary {
+    background-color: #3498db;
+    border-color: #3498db;
 }
 
-.bg-dark h1, .bg-dark h2, .bg-dark h3, .bg-dark h4, .bg-dark h5, .bg-dark h6 {
-    color: #dfe6e9;
+/* Estilos para el modo draggable */
+.draggable-layout {
+    width: 100%;
+    min-height: 800px;
 }
 
-.bg-dark p {
-    color: #b2bec3;
+.grid-item {
+    overflow: auto;
+    transition: all 0.3s ease;
 }
 
-.bg-dark .form-check-label {
-    color: #dfe6e9;
+.grid-item:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Animaciones para mostrar/ocultar elementos */
-.fade-in {
-    animation: fadeIn 0.5s;
+.react-grid-item {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
-.fade-out {
-    animation: fadeOut 0.5s;
+.react-grid-item.react-grid-placeholder {
+    background: #3498db;
+    opacity: 0.2;
+    border-radius: 10px;
 }
 
+.react-resizable-handle {
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+    background-position: bottom right;
+    background-repeat: no-repeat;
+}
+
+/* Animaciones */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -239,27 +187,25 @@ label {
     to { opacity: 0; }
 }
 
-/* Estilos responsivos */
-@media (max-width: 992px) {
-    .container-fluid {
-        padding: 15px;
-    }
-    
-    .card {
-        margin-bottom: 20px;
-    }
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
 }
 
+.fade-out {
+    animation: fadeOut 0.3s ease-in-out;
+}
+
+/* Estilos responsivos */
 @media (max-width: 768px) {
-    .container-fluid {
-        padding: 10px;
+    .card {
+        margin-bottom: 15px;
     }
     
     h1 {
         font-size: 1.8rem;
     }
     
-    .card-header {
+    .card-title {
         font-size: 1rem;
     }
 } 
