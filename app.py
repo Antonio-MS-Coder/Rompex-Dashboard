@@ -108,6 +108,17 @@ app.layout = dbc.Container([
     
     # Visualizaciones principales - Reorganizadas para mejor distribución
     dbc.Row([
+        # Top 5 Estados - Ahora en una fila separada
+        dbc.Col([
+            dbc.Card([
+                dbc.CardBody([
+                    html.Div(id="top-estados")
+                ])
+            ], className="mb-4")
+        ], width=12),
+    ]),
+    
+    dbc.Row([
         # Mapa de México - Ahora ocupa la mitad superior
         dbc.Col([
             dbc.Card([
@@ -134,8 +145,7 @@ app.layout = dbc.Container([
             dbc.Card([
                 dbc.CardBody([
                     html.H4("Ranking de Estados", className="card-title"),
-                    dcc.Graph(id="graph-ranking", figure={}, style={"height": "400px"}),
-                    html.Div(id="top-estados", className="mt-3")
+                    dcc.Graph(id="graph-ranking", figure={}, style={"height": "500px"})
                 ])
             ], className="mb-4")
         ], width=12, lg=6),
@@ -302,21 +312,23 @@ def actualizar_ranking(n_clicks, *args):
                     fortalezas[estado].append(desc)
         
         top_estados_cards = html.Div([
-            html.H5("Top 5 Estados Recomendados", className="mb-3"),
-            html.Div([
-                dbc.Card([
-                    dbc.CardHeader([
-                        html.H5(f"{i+1}. {row['Estado']}", className="mb-0")
-                    ], className="bg-primary text-white"),
-                    dbc.CardBody([
-                        html.P(f"Puntuación: {row['puntuacion_final']:.2f}", className="card-text"),
-                        html.P("Fortalezas:", className="mt-2 mb-1 fw-bold") if fortalezas.get(row['Estado'], []) else None,
-                        html.Ul([
-                            html.Li(fortaleza) for fortaleza in fortalezas.get(row['Estado'], [])
-                        ]) if fortalezas.get(row['Estado'], []) else html.P("No se identificaron fortalezas destacadas", className="text-muted"),
-                    ])
-                ], className="mb-3") for i, (_, row) in enumerate(top_estados.iterrows())
-            ])
+            html.H4("Top 5 Estados Recomendados", className="mb-3 text-center"),
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader([
+                            html.H5(f"{i+1}. {row['Estado']}", className="mb-0 text-center")
+                        ], className="bg-primary text-white"),
+                        dbc.CardBody([
+                            html.P(f"Puntuación: {row['puntuacion_final']:.2f}", className="card-text text-center fw-bold"),
+                            html.P("Fortalezas:", className="mt-2 mb-1 fw-bold") if fortalezas.get(row['Estado'], []) else None,
+                            html.Ul([
+                                html.Li(fortaleza) for fortaleza in fortalezas.get(row['Estado'], [])
+                            ]) if fortalezas.get(row['Estado'], []) else html.P("No se identificaron fortalezas destacadas", className="text-muted"),
+                        ])
+                    ], className="h-100")
+                ], width=12, md=6, lg=2.4) for i, (_, row) in enumerate(top_estados.iterrows())
+            ], className="g-2")
         ])
         
         return fig, top_estados_cards
