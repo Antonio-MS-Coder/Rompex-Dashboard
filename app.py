@@ -1,5 +1,5 @@
 import dash
-from dash import dcc, html, Input, Output, State, callback
+from dash import dcc, html, Input, Output, State, callback, no_update
 import dash_bootstrap_components as dbc
 import pandas as pd
 import plotly.express as px
@@ -456,113 +456,146 @@ def toggle_modo_draggable(modo_draggable):
     else:
         return {"display": "block"}, {"display": "none"}
 
-# Callback para sincronizar los valores de los sliders entre los dos modos
+# Callback para mostrar/ocultar elementos del dashboard
+@app.callback(
+    [Output("col-ponderacion", "style"),
+     Output("col-ranking", "style"),
+     Output("col-mapa", "style"),
+     Output("col-comparar", "style"),
+     Output("col-indicador", "style"),
+     Output("col-correlacion", "style"),
+     Output("col-top-estados", "style")],
+    [Input("checklist-mostrar", "value")]
+)
+def toggle_elementos(elementos_mostrados):
+    estilo_visible = {"display": "block"}
+    estilo_oculto = {"display": "none"}
+    
+    return [
+        estilo_visible if "ponderacion" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "ranking" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "mapa" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "comparar" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "indicador" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "correlacion" in elementos_mostrados else estilo_oculto,
+        estilo_visible if "top-estados" in elementos_mostrados else estilo_oculto
+    ]
+
+# Callback para ajustar el tamaño de las gráficas
+@app.callback(
+    [Output("graph-ranking", "style"),
+     Output("graph-mapa", "style"),
+     Output("graph-comparar", "style"),
+     Output("graph-indicador", "style"),
+     Output("graph-correlacion", "style")],
+    [Input("radio-tamano", "value")]
+)
+def ajustar_tamano_graficas(tamano):
+    alturas = {
+        "small": "250px",
+        "medium": "350px",
+        "large": "450px"
+    }
+    
+    altura = alturas.get(tamano, "350px")
+    estilo = {"height": altura}
+    
+    return [estilo, estilo, estilo, estilo, estilo]
+
+# Callback para activar el modo presentación
+@app.callback(
+    Output("contenedor-principal", "className"),
+    [Input("switch-modo-presentacion", "value")]
+)
+def toggle_modo_presentacion(modo_presentacion):
+    if modo_presentacion and True in modo_presentacion:
+        return "bg-dark text-white px-4"
+    else:
+        return "px-4"
+
+# Solución para el ciclo de dependencia: usar un enfoque de un solo sentido
+# En lugar de sincronizar en ambas direcciones, sincronizamos solo del modo normal al modo draggable
 @app.callback(
     [Output(f"slider-drag-{crit}", "value") for crit in criterios.keys()],
-    [Input(f"slider-{crit}", "value") for crit in criterios.keys()]
+    [Input(f"slider-{crit}", "value") for crit in criterios.keys()],
+    prevent_initial_call=True
 )
 def sync_sliders_normal_to_drag(*valores):
     return valores
 
-@app.callback(
-    [Output(f"slider-{crit}", "value") for crit in criterios.keys()],
-    [Input(f"slider-drag-{crit}", "value") for crit in criterios.keys()]
-)
-def sync_sliders_drag_to_normal(*valores):
-    return valores
-
-# Callback para sincronizar los valores de los checklists entre los dos modos
+# Callback para sincronizar los valores de los checklists
 @app.callback(
     Output("checklist-invertir-drag", "value"),
-    [Input("checklist-invertir", "value")]
+    [Input("checklist-invertir", "value")],
+    prevent_initial_call=True
 )
 def sync_checklist_normal_to_drag(valores):
     return valores
 
-@app.callback(
-    Output("checklist-invertir", "value"),
-    [Input("checklist-invertir-drag", "value")]
-)
-def sync_checklist_drag_to_normal(valores):
-    return valores
-
-# Callback para sincronizar los dropdowns entre los dos modos
+# Callback para sincronizar los dropdowns
 @app.callback(
     Output("dropdown-mapa-drag", "value"),
-    [Input("dropdown-mapa", "value")]
+    [Input("dropdown-mapa", "value")],
+    prevent_initial_call=True
 )
 def sync_dropdown_mapa_normal_to_drag(valor):
     return valor
 
 @app.callback(
-    Output("dropdown-mapa", "value"),
-    [Input("dropdown-mapa-drag", "value")]
-)
-def sync_dropdown_mapa_drag_to_normal(valor):
-    return valor
-
-@app.callback(
     Output("dropdown-indicador-drag", "value"),
-    [Input("dropdown-indicador", "value")]
+    [Input("dropdown-indicador", "value")],
+    prevent_initial_call=True
 )
 def sync_dropdown_indicador_normal_to_drag(valor):
     return valor
 
 @app.callback(
-    Output("dropdown-indicador", "value"),
-    [Input("dropdown-indicador-drag", "value")]
-)
-def sync_dropdown_indicador_drag_to_normal(valor):
-    return valor
-
-@app.callback(
     Output("dropdown-comparar-drag", "value"),
-    [Input("dropdown-comparar", "value")]
+    [Input("dropdown-comparar", "value")],
+    prevent_initial_call=True
 )
 def sync_dropdown_comparar_normal_to_drag(valor):
     return valor
 
-@app.callback(
-    Output("dropdown-comparar", "value"),
-    [Input("dropdown-comparar-drag", "value")]
-)
-def sync_dropdown_comparar_drag_to_normal(valor):
-    return valor
-
-# Callback para sincronizar los resultados entre los dos modos
+# Callback para sincronizar los resultados
 @app.callback(
     [Output("graph-ranking-drag", "figure"),
      Output("top-estados-drag", "children")],
     [Input("graph-ranking", "figure"),
-     Input("top-estados", "children")]
+     Input("top-estados", "children")],
+    prevent_initial_call=True
 )
 def sync_resultados_normal_to_drag(figura, top_estados):
     return figura, top_estados
 
 @app.callback(
     [Output("graph-mapa-drag", "figure")],
-    [Input("graph-mapa", "figure")]
+    [Input("graph-mapa", "figure")],
+    prevent_initial_call=True
 )
 def sync_mapa_normal_to_drag(figura):
     return [figura]
 
 @app.callback(
     [Output("graph-comparar-drag", "figure")],
-    [Input("graph-comparar", "figure")]
+    [Input("graph-comparar", "figure")],
+    prevent_initial_call=True
 )
 def sync_comparar_normal_to_drag(figura):
     return [figura]
 
 @app.callback(
     [Output("graph-indicador-drag", "figure")],
-    [Input("graph-indicador", "figure")]
+    [Input("graph-indicador", "figure")],
+    prevent_initial_call=True
 )
 def sync_indicador_normal_to_drag(figura):
     return [figura]
 
 @app.callback(
     [Output("graph-correlacion-drag", "figure")],
-    [Input("graph-correlacion", "figure")]
+    [Input("graph-correlacion", "figure")],
+    prevent_initial_call=True
 )
 def sync_correlacion_normal_to_drag(figura):
     return [figura]
@@ -571,7 +604,8 @@ def sync_correlacion_normal_to_drag(figura):
 @app.callback(
     Output("btn-calcular", "n_clicks"),
     [Input("btn-calcular-drag", "n_clicks")],
-    [State("btn-calcular", "n_clicks")]
+    [State("btn-calcular", "n_clicks")],
+    prevent_initial_call=True
 )
 def sync_calcular_drag_to_normal(n_clicks_drag, n_clicks):
     if n_clicks_drag:
