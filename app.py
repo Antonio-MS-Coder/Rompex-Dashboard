@@ -10,6 +10,7 @@ from mexico_states import mexico_states_coords, mexico_states_iso
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
+import os
 
 # Cargar los datos
 df = pd.read_csv('BASE DE DATOS ROMPEX.xlsx - Hoja 3.csv')
@@ -41,7 +42,7 @@ criterios = {
 
 # Crear la aplicación Dash
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-server = app.server
+server = app.server  # This is needed for deployment platforms like Heroku
 
 # Definir el layout del dashboard
 app.layout = dbc.Container([
@@ -804,4 +805,6 @@ def actualizar_mapa(indicador, n_clicks, *args):
         return fig
 
 if __name__ == '__main__':
-    app.run_server(debug=True, port=8070) 
+    # Use environment variable for port if available (for deployment platforms)
+    port = int(os.environ.get('PORT', 8070))
+    app.run_server(debug=False, host='0.0.0.0', port=port) 
