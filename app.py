@@ -200,10 +200,44 @@ app.layout = dbc.Container([
                 dbc.CardBody([
                     html.H5("Acerca de este proyecto", className="card-title"),
                     html.P("Dashboard desarrollado para análisis de estados de México basado en criterios económicos y sociales."),
+                    
+                    html.H6("Metodología de cálculo", className="mt-3"),
+                    html.P([
+                        "El sistema de recomendación utiliza un enfoque de análisis multicriterio con los siguientes pasos:"
+                    ]),
+                    html.Ol([
+                        html.Li([
+                            html.Strong("Normalización: "), 
+                            "Cada indicador se normaliza a una escala de 0 a 1 utilizando el método Min-Max para permitir comparaciones justas entre diferentes unidades de medida."
+                        ]),
+                        html.Li([
+                            html.Strong("Ponderación: "), 
+                            "Los usuarios pueden asignar pesos (0-10) a cada criterio según su importancia relativa. Un peso mayor significa que ese criterio tiene más influencia en la puntuación final."
+                        ]),
+                        html.Li([
+                            html.Strong("Inversión de criterios: "), 
+                            "Para criterios donde un valor menor es mejor (como 'Días para trámites'), se invierte la escala normalizada (1 - valor)."
+                        ]),
+                        html.Li([
+                            html.Strong("Cálculo de puntuación: "), 
+                            "La puntuación final de cada estado se calcula como la suma ponderada de todos los criterios normalizados y se escala a un rango de 0-100."
+                        ]),
+                        html.Li([
+                            html.Strong("Identificación de fortalezas: "), 
+                            "Para cada estado, se identifican como fortalezas aquellos criterios donde su valor normalizado supera 0.7 (es decir, está en el 30% superior)."
+                        ])
+                    ]),
+                    
+                    html.H6("Interpretación de resultados", className="mt-3"),
+                    html.P([
+                        "Los estados con mayor puntuación representan las mejores opciones según los criterios y pesos seleccionados. ",
+                        "El mapa muestra la distribución geográfica de los valores, mientras que el gráfico de radar permite comparar el desempeño de diferentes estados en todos los criterios simultáneamente."
+                    ]),
+                    
                     html.P([
                         "Código fuente disponible en ",
-                        html.A("GitHub", href="https://github.com/yourusername/mexico-dashboard", target="_blank")
-                    ]),
+                        html.A("GitHub", href="https://github.com/Antonio-MS-Coder/Rompex-Dashboard", target="_blank")
+                    ], className="mt-3"),
                 ])
             ])
         ], width=12)
