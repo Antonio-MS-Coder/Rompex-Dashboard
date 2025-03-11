@@ -10,16 +10,24 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    color: #1a5276;
+}
+
 /* Estilos para tarjetas */
 .card {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
     margin-bottom: 15px;
+    border: none;
 }
 
 .card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -27,26 +35,52 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
     font-weight: 600;
     border-radius: 8px 8px 0 0 !important;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+}
+
+.card-body {
+    padding: 1.25rem;
 }
 
 /* Estilos para botones */
 .btn-primary {
     background-color: #3498db;
     border-color: #3498db;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
     background-color: #2980b9;
     border-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para sliders */
 .rc-slider-track {
     background-color: #3498db;
+    height: 4px;
 }
 
 .rc-slider-handle {
     border-color: #3498db;
+    background-color: #fff;
+    width: 16px;
+    height: 16px;
+    margin-top: -6px;
+}
+
+.rc-slider-handle:hover {
+    border-color: #2980b9;
+}
+
+.rc-slider-handle:active {
+    border-color: #2980b9;
+    box-shadow: 0 0 5px #2980b9;
 }
 
 /* Estilos para tabs */
@@ -68,17 +102,18 @@ h1, h2, h3, h4, h5, h6 {
 .dash-graph {
     border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para dropdowns */
 .Select-control {
     border-radius: 4px;
     border: 1px solid #ddd;
+    box-shadow: none;
 }
 
 .Select-menu-outer {
     border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Estilos para el footer */
@@ -86,11 +121,58 @@ footer {
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid #eee;
+    color: #7f8c8d;
+}
+
+/* Estilos para el panel de control */
+.control-panel {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos para las etiquetas */
+label {
+    font-weight: 500;
+    color: #34495e;
+}
+
+/* Estilos para los checkboxes */
+.custom-control-label {
+    cursor: pointer;
+}
+
+/* Estilos para los tooltips de los gráficos */
+.plotly-tooltip {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border: 1px solid #ddd !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1) !important;
+    padding: 8px !important;
 }
 
 /* Estilos responsivos */
+@media (max-width: 992px) {
+    .container-fluid {
+        padding: 15px;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+}
+
 @media (max-width: 768px) {
     .container-fluid {
         padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .card-header {
+        font-size: 1rem;
     }
 } 

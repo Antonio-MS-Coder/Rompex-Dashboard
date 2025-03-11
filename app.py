@@ -84,62 +84,95 @@ app.layout = dbc.Container([
                 value=["Días_tramites_abrir_empresa"],  # Por defecto, días para trámites (menor es mejor)
                 className="mb-4"
             )
-        ], width=4),
+        ], width=3),
         
         dbc.Col([
             html.H4("Resultados del Análisis", className="mb-3"),
             
-            # Tabs para diferentes visualizaciones
-            dbc.Tabs([
-                dbc.Tab([
-                    dcc.Graph(id="graph-ranking", style={"height": "600px"})
-                ], label="Ranking de Estados"),
+            # Panel principal con gráficas lado a lado
+            dbc.Row([
+                # Primera fila de gráficas
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Ranking de Estados"),
+                        dbc.CardBody([
+                            dcc.Graph(id="graph-ranking", style={"height": "400px"})
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
                 
-                dbc.Tab([
-                    dcc.Dropdown(
-                        id="dropdown-indicador",
-                        options=[{"label": desc, "value": crit} for crit, desc in criterios.items()],
-                        value="PIB_Estatal",
-                        className="mb-3"
-                    ),
-                    dcc.Graph(id="graph-indicador", style={"height": "550px"})
-                ], label="Indicadores por Estado"),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Mapa de México"),
+                        dbc.CardBody([
+                            dcc.Dropdown(
+                                id="dropdown-mapa",
+                                options=[{"label": desc, "value": crit} for crit, desc in criterios.items()] + 
+                                        [{"label": "Puntuación Final", "value": "puntuacion_final"}],
+                                value="PIB_Estatal",
+                                className="mb-2"
+                            ),
+                            dcc.Graph(id="graph-mapa", style={"height": "350px"})
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
+            ], className="mb-4"),
+            
+            # Segunda fila de gráficas
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Comparación de Estados"),
+                        dbc.CardBody([
+                            dcc.Dropdown(
+                                id="dropdown-comparar",
+                                options=[{"label": estado, "value": estado} for estado in df["Estado"].unique()],
+                                value=df["Estado"].unique()[:5].tolist(),
+                                multi=True,
+                                className="mb-2"
+                            ),
+                            dcc.Graph(id="graph-comparar", style={"height": "350px"})
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
                 
-                dbc.Tab([
-                    dcc.Graph(id="graph-correlacion", style={"height": "600px"})
-                ], label="Correlación de Variables"),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Indicadores por Estado"),
+                        dbc.CardBody([
+                            dcc.Dropdown(
+                                id="dropdown-indicador",
+                                options=[{"label": desc, "value": crit} for crit, desc in criterios.items()],
+                                value="PIB_Estatal",
+                                className="mb-2"
+                            ),
+                            dcc.Graph(id="graph-indicador", style={"height": "350px"})
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
+            ], className="mb-4"),
+            
+            # Tercera fila con correlación y top estados
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Matriz de Correlación"),
+                        dbc.CardBody([
+                            dcc.Graph(id="graph-correlacion", style={"height": "350px"})
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
                 
-                dbc.Tab([
-                    dcc.Dropdown(
-                        id="dropdown-comparar",
-                        options=[{"label": estado, "value": estado} for estado in df["Estado"].unique()],
-                        value=df["Estado"].unique()[:5].tolist(),
-                        multi=True,
-                        className="mb-3"
-                    ),
-                    dcc.Graph(id="graph-comparar", style={"height": "550px"})
-                ], label="Comparar Estados"),
-                
-                # Nueva pestaña para el mapa de calor
-                dbc.Tab([
-                    dcc.Dropdown(
-                        id="dropdown-mapa",
-                        options=[{"label": desc, "value": crit} for crit, desc in criterios.items()] + 
-                                [{"label": "Puntuación Final", "value": "puntuacion_final"}],
-                        value="PIB_Estatal",
-                        className="mb-3"
-                    ),
-                    dcc.Graph(id="graph-mapa", style={"height": "550px"})
-                ], label="Mapa de México"),
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardHeader("Top 5 Estados Recomendados"),
+                        dbc.CardBody([
+                            html.Div(id="top-estados")
+                        ])
+                    ], className="h-100 shadow-sm")
+                ], width=6),
             ]),
-        ], width=8)
-    ]),
-    
-    dbc.Row([
-        dbc.Col([
-            html.H4("Top 5 Estados Recomendados", className="mt-4 mb-3"),
-            html.Div(id="top-estados", className="mb-4")
-        ])
+        ], width=9)
     ]),
     
     dbc.Row([
@@ -212,28 +245,44 @@ def actualizar_ranking(n_clicks, *args):
     fig.update_layout(
         xaxis={'categoryorder': 'total descending'},
         coloraxis_showscale=False,
-        height=600
+        margin=dict(l=40, r=20, t=40, b=40),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        xaxis_tickangle=-45
     )
     
     # Crear componente para mostrar los top 5 estados
     top5 = df_ranking.head(5)
-    top_estados_cards = dbc.Row([
-        dbc.Col([
-            dbc.Card([
-                dbc.CardHeader(f"#{i+1}: {row['Estado']}", className="text-center"),
-                dbc.CardBody([
-                    html.H5(f"{row['puntuacion_final']:.1f} puntos", className="text-center"),
-                    html.P([
-                        html.Strong("Fortalezas: "),
-                        ", ".join([
-                            criterios[crit] for crit, _ in criterios.items()
-                            if f"{crit}_norm" in df_ranking.columns and row[f"{crit}_norm"] > 0.7
-                        ])
+    
+    # Identificar fortalezas para cada estado
+    fortalezas = {}
+    for _, row in top5.iterrows():
+        estado = row["Estado"]
+        fortalezas[estado] = []
+        for crit, _ in criterios.items():
+            if f"{crit}_norm" in df_ranking.columns and row[f"{crit}_norm"] > 0.7:
+                fortalezas[estado].append(crit)
+    
+    # Crear tarjetas para los top 5 estados
+    top_estados_cards = html.Div([
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardHeader([
+                        html.Span(f"#{i+1}", className="badge bg-primary me-2"),
+                        html.Span(row['Estado'], style={"font-size": "1.1rem"})
+                    ], className="d-flex align-items-center"),
+                    dbc.CardBody([
+                        html.H5(f"{row['puntuacion_final']:.1f} puntos", className="text-center text-primary mb-3"),
+                        html.P([
+                            html.Strong("Fortalezas: ", className="text-success"),
+                            html.Span(", ".join([criterios[crit] for crit in fortalezas[row['Estado']]]) if fortalezas[row['Estado']] else "No se identificaron fortalezas destacadas.")
+                        ], className="small mb-0")
                     ])
-                ])
-            ], className="h-100")
-        ], width=12 // min(5, len(top5)))
-        for i, (_, row) in enumerate(top5.iterrows())
+                ], className="mb-3 shadow-sm")
+            ], width=12)
+            for i, (_, row) in enumerate(top5.iterrows())
+        ])
     ])
     
     return fig, top_estados_cards
@@ -259,8 +308,19 @@ def actualizar_indicador(indicador):
     )
     
     fig.update_layout(
-        xaxis={'categoryorder': 'total descending'},
-        height=550
+        xaxis={'categoryorder': 'total descending', 'tickangle': -45},
+        margin=dict(l=40, r=20, t=40, b=80),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        coloraxis_showscale=False
+    )
+    
+    # Añadir valores sobre las barras
+    fig.update_traces(
+        texttemplate='%{y:.1f}', 
+        textposition='outside',
+        marker_line_color='rgb(8,48,107)',
+        marker_line_width=1.5
     )
     
     return fig
@@ -288,9 +348,26 @@ def actualizar_correlacion(_):
         title="Matriz de Correlación entre Variables"
     )
     
+    # Añadir valores de correlación como texto
+    annotations = []
+    for i, row in enumerate(corr_matrix.values):
+        for j, value in enumerate(row):
+            annotations.append(
+                dict(
+                    x=j,
+                    y=i,
+                    text=f"{value:.2f}",
+                    font=dict(color="white" if abs(value) > 0.5 else "black", size=8),
+                    showarrow=False
+                )
+            )
+    
     fig.update_layout(
-        height=600,
-        xaxis={'tickangle': 45}
+        margin=dict(l=40, r=20, t=40, b=40),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        xaxis={'tickangle': 45},
+        annotations=annotations
     )
     
     return fig
@@ -321,6 +398,9 @@ def actualizar_comparacion(estados):
     # Crear gráfico de radar
     fig = go.Figure()
     
+    # Colores para los diferentes estados
+    colores = px.colors.qualitative.Plotly[:len(estados)]
+    
     for i, estado in enumerate(df_radar["Estado"]):
         values = []
         theta_labels = []
@@ -339,19 +419,36 @@ def actualizar_comparacion(estados):
                 r=values,
                 theta=theta_labels,
                 fill='toself',
-                name=estado
+                name=estado,
+                line=dict(color=colores[i], width=2),
+                fillcolor=colores[i],
+                opacity=0.6
             ))
     
     fig.update_layout(
         polar=dict(
             radialaxis=dict(
                 visible=True,
-                range=[0, 1]
-            )
+                range=[0, 1],
+                tickfont=dict(size=10),
+                gridcolor="rgba(0,0,0,0.1)"
+            ),
+            angularaxis=dict(
+                tickfont=dict(size=10),
+                gridcolor="rgba(0,0,0,0.1)"
+            ),
+            bgcolor="rgba(255,255,255,0.9)"
         ),
         showlegend=True,
-        title="Comparación de Estados por Indicadores Normalizados",
-        height=550
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.2,
+            xanchor="center",
+            x=0.5
+        ),
+        margin=dict(l=40, r=40, t=40, b=60),
+        paper_bgcolor='rgba(0,0,0,0)'
     )
     
     return fig
@@ -409,9 +506,6 @@ def actualizar_mapa(indicador, n_clicks, *args):
         titulo = f"{criterios[indicador]} por Estado"
         color_scale = "viridis"
     
-    # Preparar datos para el mapa
-    data_mapa = []
-    
     # Añadir coordenadas de latitud y longitud al dataframe
     for estado in df_mapa["Estado"]:
         if estado in mexico_states_coords:
@@ -427,13 +521,13 @@ def actualizar_mapa(indicador, n_clicks, *args):
         color=valor_mostrar,
         size=valor_mostrar,
         hover_name="Estado",
-        hover_data=[valor_mostrar],
+        hover_data={valor_mostrar: True, "lat": False, "lon": False},
         color_continuous_scale=color_scale,
         size_max=25,
-        zoom=4,
+        zoom=4.2,
         center={"lat": 23.6345, "lon": -102.5528},  # Centro de México
         mapbox_style="carto-positron",
-        title=titulo
+        opacity=0.8
     )
     
     # Añadir etiquetas de estados
@@ -446,15 +540,24 @@ def actualizar_mapa(indicador, n_clicks, *args):
                     lon=[mexico_states_coords[estado][1]],
                     mode="text",
                     text=[estado],
-                    textfont=dict(size=10, color="black"),
+                    textfont=dict(size=9, color="black", family="Arial, sans-serif"),
                     showlegend=False,
                     hoverinfo="none"
                 )
             )
     
+    # Mejorar el diseño del mapa
     fig.update_layout(
-        height=550,
-        margin={"r": 0, "t": 30, "l": 0, "b": 0}
+        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        coloraxis_colorbar=dict(
+            title=criterios[indicador] if indicador != "puntuacion_final" else "Puntuación",
+            thicknessmode="pixels", thickness=15,
+            lenmode="pixels", len=300,
+            yanchor="top", y=1,
+            ticks="outside"
+        ),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
     )
     
     return fig
