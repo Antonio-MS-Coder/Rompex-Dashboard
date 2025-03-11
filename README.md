@@ -1,112 +1,80 @@
-# Rompex Dashboard
+# Dashboard de Análisis de Estados de México
 
-Dashboard interactivo para evaluar la ubicación óptima de una nueva planta de distribución en México, basado en diversos indicadores económicos y sociales por estado.
+Este dashboard interactivo permite analizar y comparar los estados de México según diferentes criterios económicos y sociales.
 
-![Dashboard Preview](https://via.placeholder.com/800x400?text=Rompex+Dashboard+Preview)
-
-## Descripción
-
-Este dashboard permite analizar y comparar diferentes estados de México para determinar la ubicación ideal para una nueva planta de distribución. Utiliza datos de indicadores económicos, sociales y de infraestructura para cada estado, y permite ponderar estos criterios según su importancia para la decisión.
+![Dashboard Preview](dashboard_preview.png)
 
 ## Características
 
-- **Ponderación de criterios**: Asigna pesos a diferentes factores según su importancia para la decisión.
-- **Ranking de estados**: Visualiza qué estados son más adecuados según los criterios ponderados.
-- **Mapa interactivo**: Visualiza los datos geográficamente en un mapa de México.
-- **Análisis comparativo**: Compara estados específicos mediante gráficos de radar.
-- **Análisis de correlación**: Entiende cómo se relacionan las diferentes variables entre sí.
-- **Visualización de indicadores**: Analiza cada indicador por separado para todos los estados.
+- **Mapa interactivo de México**: Visualiza indicadores económicos y sociales por estado.
+- **Ranking de estados**: Compara los estados según una puntuación calculada en base a criterios ponderados.
+- **Comparación de estados**: Visualiza el desempeño de múltiples estados en un gráfico de radar.
+- **Análisis de indicadores**: Explora cada indicador individualmente para todos los estados.
+- **Ponderación personalizable**: Ajusta la importancia de cada criterio según tus necesidades.
 
-## Datos utilizados
+## Criterios de análisis
 
-El dashboard utiliza datos de diferentes indicadores por estado, incluyendo:
-- PIB Estatal
-- Inversión extranjera
-- Crecimiento del PIB
-- PIB de Construcción
-- Terminales punto de venta
-- Location Quotient (LQ)
+El dashboard incluye los siguientes criterios:
+
+- PIB Estatal (millones de pesos)
+- Inversión extranjera (proporción)
+- Crecimiento del PIB (%)
+- PIB de Construcción (millones de pesos)
+- Terminales punto de venta (cantidad)
+- Location Quotient
 - Índice de transparencia fiscal
 - Satisfacción de servicios generales
 - Días para trámites de apertura de empresa
-- Áreas naturales protegidas
+- Áreas naturales protegidas (hectáreas)
 
 ## Instalación
 
 1. Clona este repositorio:
    ```
-   git clone https://github.com/Antonio-MS-Coder/Rompex-Dashboard.git
-   cd Rompex-Dashboard
+   git clone https://github.com/yourusername/mexico-dashboard.git
+   cd mexico-dashboard
    ```
 
-2. Crea un entorno virtual:
+2. Crea un entorno virtual e instala las dependencias:
    ```
-   python3 -m venv venv
-   ```
-
-3. Activa el entorno virtual:
-   - En macOS/Linux:
-     ```
-     source venv/bin/activate
-     ```
-   - En Windows:
-     ```
-     venv\Scripts\activate
-     ```
-
-4. Instala las dependencias:
-   ```
+   python -m venv venv
+   source venv/bin/activate  # En Windows: venv\Scripts\activate
    pip install -r requirements.txt
    ```
 
-## Uso
-
-1. Ejecuta la aplicación:
+3. Ejecuta la aplicación:
    ```
    python app.py
    ```
 
-2. Abre tu navegador web y ve a:
-   ```
-   http://127.0.0.1:8050/
-   ```
+4. Abre tu navegador y ve a `http://127.0.0.1:8070/`
 
-3. Utiliza el dashboard:
-   - Ajusta los pesos de los criterios según su importancia
-   - Selecciona qué criterios deben invertirse (donde un valor menor es mejor)
-   - Haz clic en "Calcular Ranking" para ver los resultados
-   - Explora las diferentes visualizaciones en las pestañas
+## Requisitos
 
-## Estructura del proyecto
+- Python 3.7+
+- Dash
+- Plotly
+- Pandas
+- NumPy
+- scikit-learn
+- Matplotlib
 
-- `app.py`: Archivo principal que contiene el código del dashboard
-- `utils.py`: Funciones auxiliares para el procesamiento de datos
-- `mexico_states.py`: Datos geográficos de los estados de México
-- `assets/styles.css`: Estilos CSS para el dashboard
-- `requirements.txt`: Lista de dependencias
-- `BASE DE DATOS ROMPEX.xlsx - Hoja 3.csv`: Datos utilizados por el dashboard
+Consulta el archivo `requirements.txt` para ver la lista completa de dependencias.
 
-## Tecnologías utilizadas
+## Uso
 
-- [Dash](https://dash.plotly.com/): Framework para crear aplicaciones web analíticas
-- [Plotly](https://plotly.com/python/): Biblioteca para visualizaciones interactivas
-- [Pandas](https://pandas.pydata.org/): Manipulación y análisis de datos
-- [NumPy](https://numpy.org/): Computación numérica
-- [scikit-learn](https://scikit-learn.org/): Herramientas de aprendizaje automático
+1. Ajusta los pesos de cada criterio usando los deslizadores.
+2. Haz clic en "Calcular" para actualizar las visualizaciones.
+3. Explora las diferentes visualizaciones:
+   - Mapa: Selecciona un indicador para visualizar en el mapa.
+   - Ranking: Observa qué estados tienen mejor desempeño según los criterios ponderados.
+   - Comparación: Selecciona estados específicos para comparar en un gráfico de radar.
+   - Indicadores: Explora cada indicador individualmente.
 
-## Contribuir
+## Contribuciones
 
-Si deseas contribuir a este proyecto, por favor:
-1. Haz un fork del repositorio
-2. Crea una rama para tu característica (`git checkout -b feature/nueva-caracteristica`)
-3. Haz commit de tus cambios (`git commit -m 'Añadir nueva característica'`)
-4. Haz push a la rama (`git push origin feature/nueva-caracteristica`)
-5. Abre un Pull Request
+Las contribuciones son bienvenidas. Por favor, abre un issue para discutir los cambios propuestos o envía un pull request.
 
 ## Licencia
 
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## Contacto
-
-Si tienes preguntas o comentarios sobre este proyecto, por favor contacta a [tu nombre o correo electrónico]. 
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo LICENSE para más detalles. 
