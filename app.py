@@ -51,47 +51,109 @@ app.layout = dbc.Container([
         ])
     ]),
     
+    # Botones de personalización del dashboard
     dbc.Row([
         dbc.Col([
-            html.H4("Ponderación de Criterios", className="mb-3"),
-            html.P("Asigne un peso a cada criterio (0-10) según su importancia para la decisión."),
-            
-            # Sliders para ponderación de criterios
-            *[dbc.Row([
-                dbc.Col([
-                    html.Label(desc, className="mt-2"),
-                    dcc.Slider(
-                        id=f'slider-{crit}',
-                        min=0,
-                        max=10,
-                        step=1,
-                        value=5,  # Valor predeterminado
-                        marks={i: str(i) for i in range(0, 11, 2)},
-                        className="mb-4"
-                    )
-                ])
-            ]) for crit, desc in criterios.items()],
-            
-            # Botón para calcular ranking
-            dbc.Button("Calcular Ranking", id="btn-calcular", color="primary", className="mt-3 mb-4 w-100"),
-            
-            # Selector para invertir criterios (menor es mejor)
-            html.H5("Criterios a Invertir", className="mt-4 mb-2"),
-            html.P("Seleccione los criterios donde un valor menor es mejor (ej: días para trámites)."),
-            dbc.Checklist(
-                id="checklist-invertir",
-                options=[{"label": desc, "value": crit} for crit, desc in criterios.items()],
-                value=["Días_tramites_abrir_empresa"],  # Por defecto, días para trámites (menor es mejor)
-                className="mb-4"
+            dbc.Button(
+                "Personalizar Dashboard", 
+                id="btn-personalizar", 
+                color="secondary", 
+                className="mb-3",
+                n_clicks=0
+            ),
+            dbc.Collapse(
+                dbc.Card([
+                    dbc.CardHeader("Opciones de Personalización"),
+                    dbc.CardBody([
+                        html.H5("Mostrar/Ocultar Elementos", className="mb-3"),
+                        dbc.Checklist(
+                            options=[
+                                {"label": "Panel de Ponderación", "value": "panel-ponderacion"},
+                                {"label": "Ranking de Estados", "value": "grafica-ranking"},
+                                {"label": "Mapa de México", "value": "grafica-mapa"},
+                                {"label": "Comparación de Estados", "value": "grafica-comparar"},
+                                {"label": "Indicadores por Estado", "value": "grafica-indicador"},
+                                {"label": "Matriz de Correlación", "value": "grafica-correlacion"},
+                                {"label": "Top 5 Estados", "value": "top-estados-panel"}
+                            ],
+                            value=["panel-ponderacion", "grafica-ranking", "grafica-mapa", "grafica-comparar", 
+                                   "grafica-indicador", "grafica-correlacion", "top-estados-panel"],
+                            id="checklist-mostrar",
+                            switch=True,
+                            className="mb-3"
+                        ),
+                        html.H5("Tamaño de Gráficas", className="mb-3"),
+                        dbc.RadioItems(
+                            options=[
+                                {"label": "Pequeño", "value": "small"},
+                                {"label": "Mediano", "value": "medium"},
+                                {"label": "Grande", "value": "large"}
+                            ],
+                            value="medium",
+                            id="radio-tamano",
+                            inline=True,
+                            className="mb-3"
+                        ),
+                        html.H5("Modo de Presentación", className="mb-3"),
+                        dbc.Switch(
+                            id="switch-modo-presentacion",
+                            label="Modo Presentación",
+                            value=False,
+                            className="mb-3"
+                        )
+                    ])
+                ]),
+                id="collapse-personalizar",
+                is_open=False
             )
-        ], width=3),
+        ], width=12)
+    ]),
+    
+    dbc.Row([
+        # Panel de ponderación (columna izquierda)
+        dbc.Col([
+            html.Div([
+                html.H4("Ponderación de Criterios", className="mb-3"),
+                html.P("Asigne un peso a cada criterio (0-10) según su importancia para la decisión."),
+                
+                # Sliders para ponderación de criterios
+                *[dbc.Row([
+                    dbc.Col([
+                        html.Label(desc, className="mt-2"),
+                        dcc.Slider(
+                            id=f'slider-{crit}',
+                            min=0,
+                            max=10,
+                            step=1,
+                            value=5,  # Valor predeterminado
+                            marks={i: str(i) for i in range(0, 11, 2)},
+                            className="mb-4"
+                        )
+                    ])
+                ]) for crit, desc in criterios.items()],
+                
+                # Botón para calcular ranking
+                dbc.Button("Calcular Ranking", id="btn-calcular", color="primary", className="mt-3 mb-4 w-100"),
+                
+                # Selector para invertir criterios (menor es mejor)
+                html.H5("Criterios a Invertir", className="mt-4 mb-2"),
+                html.P("Seleccione los criterios donde un valor menor es mejor (ej: días para trámites)."),
+                dbc.Checklist(
+                    id="checklist-invertir",
+                    options=[{"label": desc, "value": crit} for crit, desc in criterios.items()],
+                    value=["Días_tramites_abrir_empresa"],  # Por defecto, días para trámites (menor es mejor)
+                    className="mb-4"
+                )
+            ], id="panel-ponderacion")
+        ], width=3, id="col-ponderacion"),
         
+        # Panel principal con gráficas (columna derecha)
         dbc.Col([
             html.H4("Resultados del Análisis", className="mb-3"),
             
-            # Panel principal con gráficas lado a lado
+            # Primera fila de gráficas
             dbc.Row([
-                # Primera fila de gráficas
+                # Ranking de Estados
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Ranking de Estados"),
@@ -99,8 +161,9 @@ app.layout = dbc.Container([
                             dcc.Graph(id="graph-ranking", style={"height": "400px"})
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
+                ], width=6, id="col-ranking"),
                 
+                # Mapa de México
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Mapa de México"),
@@ -115,11 +178,12 @@ app.layout = dbc.Container([
                             dcc.Graph(id="graph-mapa", style={"height": "350px"})
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
-            ], className="mb-4"),
+                ], width=6, id="col-mapa"),
+            ], className="mb-4", id="fila-1"),
             
             # Segunda fila de gráficas
             dbc.Row([
+                # Comparación de Estados
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Comparación de Estados"),
@@ -134,8 +198,9 @@ app.layout = dbc.Container([
                             dcc.Graph(id="graph-comparar", style={"height": "350px"})
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
+                ], width=6, id="col-comparar"),
                 
+                # Indicadores por Estado
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Indicadores por Estado"),
@@ -149,11 +214,12 @@ app.layout = dbc.Container([
                             dcc.Graph(id="graph-indicador", style={"height": "350px"})
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
-            ], className="mb-4"),
+                ], width=6, id="col-indicador"),
+            ], className="mb-4", id="fila-2"),
             
             # Tercera fila con correlación y top estados
             dbc.Row([
+                # Matriz de Correlación
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Matriz de Correlación"),
@@ -161,8 +227,9 @@ app.layout = dbc.Container([
                             dcc.Graph(id="graph-correlacion", style={"height": "350px"})
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
+                ], width=6, id="col-correlacion"),
                 
+                # Top 5 Estados Recomendados
                 dbc.Col([
                     dbc.Card([
                         dbc.CardHeader("Top 5 Estados Recomendados"),
@@ -170,10 +237,10 @@ app.layout = dbc.Container([
                             html.Div(id="top-estados")
                         ])
                     ], className="h-100 shadow-sm")
-                ], width=6),
-            ]),
-        ], width=9)
-    ]),
+                ], width=6, id="col-top-estados"),
+            ], id="fila-3"),
+        ], width=9, id="col-resultados")
+    ], id="fila-principal"),
     
     dbc.Row([
         dbc.Col([
@@ -183,7 +250,97 @@ app.layout = dbc.Container([
             ], className="mt-4 pt-3 border-top")
         ])
     ])
-], fluid=True)
+], fluid=True, id="container-principal")
+
+# Callback para mostrar/ocultar el panel de personalización
+@app.callback(
+    Output("collapse-personalizar", "is_open"),
+    [Input("btn-personalizar", "n_clicks")],
+    [State("collapse-personalizar", "is_open")]
+)
+def toggle_collapse(n_clicks, is_open):
+    if n_clicks:
+        return not is_open
+    return is_open
+
+# Callback para personalizar el dashboard
+@app.callback(
+    [Output("col-ponderacion", "width"),
+     Output("col-resultados", "width"),
+     Output("panel-ponderacion", "style"),
+     Output("col-ranking", "style"),
+     Output("col-mapa", "style"),
+     Output("col-comparar", "style"),
+     Output("col-indicador", "style"),
+     Output("col-correlacion", "style"),
+     Output("col-top-estados", "style"),
+     Output("graph-ranking", "style"),
+     Output("graph-mapa", "style"),
+     Output("graph-comparar", "style"),
+     Output("graph-indicador", "style"),
+     Output("graph-correlacion", "style"),
+     Output("container-principal", "className")],
+    [Input("checklist-mostrar", "value"),
+     Input("radio-tamano", "value"),
+     Input("switch-modo-presentacion", "value")]
+)
+def personalizar_dashboard(elementos_mostrados, tamano, modo_presentacion):
+    # Estilos por defecto
+    estilo_oculto = {"display": "none"}
+    estilo_visible = {"display": "block"}
+    
+    # Determinar ancho de columnas
+    if "panel-ponderacion" in elementos_mostrados:
+        col_ponderacion_width = 3
+        col_resultados_width = 9
+    else:
+        col_ponderacion_width = 0
+        col_resultados_width = 12
+    
+    # Determinar altura de gráficas según tamaño seleccionado
+    alturas_graficas = {
+        "small": "250px",
+        "medium": "350px",
+        "large": "450px"
+    }
+    altura_grafica = alturas_graficas[tamano]
+    
+    # Estilos para cada elemento
+    estilo_panel_ponderacion = estilo_visible if "panel-ponderacion" in elementos_mostrados else estilo_oculto
+    estilo_ranking = estilo_visible if "grafica-ranking" in elementos_mostrados else estilo_oculto
+    estilo_mapa = estilo_visible if "grafica-mapa" in elementos_mostrados else estilo_oculto
+    estilo_comparar = estilo_visible if "grafica-comparar" in elementos_mostrados else estilo_oculto
+    estilo_indicador = estilo_visible if "grafica-indicador" in elementos_mostrados else estilo_oculto
+    estilo_correlacion = estilo_visible if "grafica-correlacion" in elementos_mostrados else estilo_oculto
+    estilo_top_estados = estilo_visible if "top-estados-panel" in elementos_mostrados else estilo_oculto
+    
+    # Estilos para las gráficas (altura)
+    estilo_grafica_ranking = {"height": altura_grafica}
+    estilo_grafica_mapa = {"height": altura_grafica}
+    estilo_grafica_comparar = {"height": altura_grafica}
+    estilo_grafica_indicador = {"height": altura_grafica}
+    estilo_grafica_correlacion = {"height": altura_grafica}
+    
+    # Clase para el contenedor principal (modo presentación)
+    clase_container = "bg-dark text-white p-4" if modo_presentacion else "fluid"
+    
+    return (
+        col_ponderacion_width,
+        col_resultados_width,
+        estilo_panel_ponderacion,
+        estilo_ranking,
+        estilo_mapa,
+        estilo_comparar,
+        estilo_indicador,
+        estilo_correlacion,
+        estilo_top_estados,
+        estilo_grafica_ranking,
+        estilo_grafica_mapa,
+        estilo_grafica_comparar,
+        estilo_grafica_indicador,
+        estilo_grafica_correlacion,
+        clase_container
+    )
 
 # Callback para actualizar el ranking de estados
 @app.callback(
