@@ -17,20 +17,20 @@ Sigue estos pasos para crear un repositorio en GitHub y subir tu código:
 Una vez creado el repositorio, GitHub te mostrará comandos para conectar tu repositorio local con el remoto. Ejecuta los siguientes comandos en tu terminal, reemplazando `TU_USUARIO` con tu nombre de usuario de GitHub:
 
 ```bash
-git remote add origin https://github.com/TU_USUARIO/Rompex-Dashboard.git
+git remote add origin https://github.com/Antonio-MS-Coder/Rompex-Dashboard.git
 git push -u origin main
 ```
 
 Si prefieres usar SSH en lugar de HTTPS (recomendado si tienes configurada una clave SSH):
 
 ```bash
-git remote add origin git@github.com:TU_USUARIO/Rompex-Dashboard.git
+git remote add origin git@github.com:Antonio-MS-Coder/Rompex-Dashboard.git
 git push -u origin main
 ```
 
 ## 3. Verificar que todo se haya subido correctamente
 
-1. Visita `https://github.com/TU_USUARIO/Rompex-Dashboard` en tu navegador.
+1. Visita `https://github.com/Antonio-MS-Coder/Rompex-Dashboard` en tu navegador.
 2. Deberías ver todos tus archivos en el repositorio.
 
 ## 4. Actualizar el repositorio en el futuro
@@ -51,7 +51,7 @@ Ahora puedes compartir tu Dashboard con cualquier persona enviándoles el enlace
 
 Para que otras personas puedan ejecutar tu Dashboard, deberán:
 
-1. Clonar tu repositorio: `git clone https://github.com/TU_USUARIO/Rompex-Dashboard.git`
+1. Clonar tu repositorio: `git clone https://github.com/Antonio-MS-Coder/Rompex-Dashboard.git`
 2. Crear un entorno virtual: `python3 -m venv venv`
 3. Activar el entorno virtual:
    - En macOS/Linux: `source venv/bin/activate`

@@ -35,7 +35,7 @@ El dashboard utiliza datos de diferentes indicadores por estado, incluyendo:
 
 1. Clona este repositorio:
    ```
-   git clone https://github.com/TU_USUARIO/Rompex-Dashboard.git
+   git clone https://github.com/Antonio-MS-Coder/Rompex-Dashboard.git
    cd Rompex-Dashboard
    ```
 
